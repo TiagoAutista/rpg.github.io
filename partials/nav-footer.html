@@ -1,0 +1,39 @@
+ <!-- Menu de navegação no rodapé -->
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active" data-page="home">
+      <i>🏠</i>
+      <span>Início</span>
+    </a>
+    <a href="#" class="nav-item" data-page="search">
+      <i>🔍</i>
+      <span>Buscar</span>
+    </a>
+    <a href="#" class="nav-item" data-page="favorites">
+      <i>❤️</i>
+      <span>Favoritos</span>
+    </a>
+    <a href="#" class="nav-item" data-page="profile">
+      <i>🧑</i>
+      <span>Perfil</span>
+    </a>
+  </nav>
+
+  <script>
+    // Ativar item clicado
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        // Remove classe 'active' de todos
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+        // Adiciona 'active' ao clicado
+        this.classList.add('active');
+
+        // Aqui você pode carregar conteúdo dinâmico (ex: com fetch ou mudar página)
+        const page = this.getAttribute('data-page');
+        console.log('Página selecionada:', page);
+      });
+    });
+  </script>
+</body>

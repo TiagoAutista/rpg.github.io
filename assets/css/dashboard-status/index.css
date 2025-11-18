@@ -1,0 +1,177 @@
+/* =============================================================================
+   3. PAINEL DE STATUS DO PERSONAGEM (DASHBOARD EM DUAS COLUNAS)
+   ============================================================================= */
+
+:root {
+  --primary-color: #4a6cf7;
+  --bg-card: #1e1e2e;
+  --text-color: #ffffff;
+  --font-family: 'Segoe UI', system-ui, sans-serif;
+  --modal-bg: rgba(0, 0, 0, 0.8);
+  --card-bg: #f9f5e9;
+  --border-color: #d4c8b0;
+  --accent-color: #e67e22;
+  --tab-active: #4a6cf7;
+  --base-padding: 68px;
+}
+
+/* Mobile: valor padrão (opcional, definido fora de qualquer media query) */
+.dashboard-size {
+  padding: 0 calc(var(--base-padding) * 0.0);
+  /* valor para telas < 576px, se desejar */
+}
+
+/* Controle de escala global: altere o font-size aqui para redimensionar tudo */
+.profile-size {
+  font-size: 10px;
+  /* ← ajuste este valor para aumentar/reduzir todo o card */
+  position: relative;
+  top: 10px;
+  left: 37%;
+}
+
+.user-profile-card {
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  padding: .5em;
+  border-radius: 0.75em;
+  box-shadow: 0 0.375em 1.25em rgba(0, 0, 0, 0.4);
+  gap: 2em;
+  max-width: 22.5em;
+  /* 360px / 16 = 22.5 */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.avatar-frame {
+  position: relative;
+  width: 2em;
+  /* 64px / 16 = 4 */
+  height: 2em;
+}
+
+.avatar-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.moldura-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8em;
+  /* ajuste conforme sua imagem (ex: 1.25x o avatar) */
+  height: auto;
+  /* mantém proporção da imagem */
+  z-index: 2;
+  pointer-events: none;
+}
+
+.level-badge {
+  position: absolute;
+  bottom: -0.375em;
+  /* -6px / 16 = -0.375 */
+  right: -0.375em;
+  background: var(--primary-color);
+  color: white;
+  font-size: 0.625em;
+  /* 10px / 16 */
+  font-weight: bold;
+  width: 1.375em;
+  /* 22px / 16 */
+  height: 1.375em;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0.125em solid #121212;
+  /* 2px / 16 */
+  z-index: 3;
+}
+
+.user-info {
+  flex: 1;
+  color: var(--text-color);
+  height: 30px;
+}
+
+.username {
+  font-size: 1.125em;
+  /* 18px / 16 */
+  font-weight: 600;
+  margin-bottom: 0.375em;
+  /* 6px / 16 */
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  /* 8px / 16 */
+  font-size: 0.75em;
+  /* 12px / 16 */
+  color: #a0a0b0;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 0.375em;
+  /* 6px / 16 */
+  background: #2d2d3f;
+  border-radius: 0.1875em;
+  /* 3px / 16 */
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--primary-color);
+  border-radius: 0.1875em;
+  width: 75%;
+  /* pode ser dinâmico via JS ou CSS custom property */
+}
+
+.progress-value {
+  min-width: 3.75em;
+  /* 60px / 16 */
+  text-align: right;
+}
+
+.add-button {
+  background: transparent;
+  border: 0.125em solid var(--primary-color);
+  /* 2px / 16 */
+  border-radius: 0.5em;
+  /* 8px / 16 */
+  width: 2.25em;
+  /* 36px / 16 */
+  height: 2.25em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  padding: 0;
+  color: var(--primary-color);
+}
+
+.add-button:hover {
+  background: rgba(74, 108, 247, 0.1);
+}
+
+.add-button:active {
+  transform: scale(0.95);
+}
+
+
+/* =============================================================================
+   6. RESPONSIVIDADE
+   ============================================================================= */
