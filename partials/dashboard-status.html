@@ -1,27 +1,30 @@
 <section>
     <div class="dashboard-size">
         <div class="justify-content-center">
-            <main class="main-container framed" style="height: 420px; width: 80%; padding-top: 25px;">
+            <main class="main-container framed" style="height: 500px; width: 50%; padding-top: 25px;">
                 <div class="profile-size">
                     <div class="user-profile-card">
                         <!-- Avatar com moldura -->
-                        <div class="avatar-frame">
-                            <img src="/assets/img/avatar-frame/perfil.png" alt="Foto de perfil" class="avatar-bg" />
+                        <div class="avatar-frame" aria-hidden="true">
+                            <img src="/assets/img/avatar-frame/perfil.png" alt="" class="avatar-bg" />
                             <img src="/assets/img/avatar-frame/moldura.png" alt="" class="moldura-overlay" />
-                            <div class="level-badge">162</div>
+                            <div class="level-badge" aria-label="Nível 162">162</div>
                         </div>
-                        <!-- Info -->
+
+                        <!-- Informações do usuário -->
                         <div class="user-info">
-                            <div class="username">zAgron</div>
-                            <div class="progress-container">
-                                <div class="progress-bar">
-                                    <div class="progress-fill"></div>
+                            <div class="username" aria-label="Nome de usuário">zAgron</div>
+                            <div class="progress-container" aria-label="Progresso: 149.28 milhões">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
+                                    aria-valuemax="100">
+                                    <div class="progress-fill" style="width: 75%"></div>
                                 </div>
-                                <span class="progress-value">149.28M</span>
+                                <span class="progress-value" aria-hidden="true">149.28M</span>
                             </div>
                         </div>
-                        <!-- Botão -->
-                        <button class="add-button" id="openModalBtn" aria-label="Adicionar">
+
+                        <!-- Botão de ação -->
+                        <button class="add-button" id="openModalBtn" aria-label="Adicionar zAgron">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
@@ -31,7 +34,6 @@
                         </button>
                     </div>
                     <div class="avatar-main">
-                        <br><br><br>
                         <img src="https://www.fightersgeneration.com/characters/ha-win.gif" alt="" srcset="">
                     </div>
                 </div>
