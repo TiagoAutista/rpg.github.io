@@ -15,22 +15,18 @@
   --base-padding: 68px;
 }
 
-/* Mobile: valor padrão (opcional, definido fora de qualquer media query) */
-.dashboard-size {
-  padding: 0 calc(var(--base-padding) * 0.0);
-  /* valor para telas < 576px, se desejar */
-}
-
 /* Controle de escala global: altere o font-size aqui para redimensionar tudo */
 .profile-size {
   position: fixed;
-  top: 20%; /* ajustável conforme sua preferência */
+  top: 20%;
+  /* ajustável conforme sua preferência */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5em; /* ←←← CONTROLA A DISTÂNCIA entre o card e o avatar */
+  gap: 1.5em;
+  /* ←←← CONTROLA A DISTÂNCIA entre o card e o avatar */
   font-size: 10px;
   z-index: 1000;
 }
@@ -53,8 +49,10 @@
 
 /* Garante que o avatar seja sempre um quadrado perfeito */
 .avatar-main {
-  width: 200px; /* largura fixa */
-  height: 250px; /* igual à largura → quadrado! */
+  width: 200px;
+  /* largura fixa */
+  height: 250px;
+  /* igual à largura → quadrado! */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,7 +62,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 8px; /* ou 50% se quiser circular */
+  border-radius: 8px;
+  /* ou 50% se quiser circular */
   /* opcional: adicione borda ou sombra */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
@@ -200,3 +199,20 @@
 /* =============================================================================
    6. RESPONSIVIDADE
    ============================================================================= */
+
+
+/* Sm: 576px até 767px */
+@media (min-width: 320px) {
+    .dashboard-size {
+        height: 500px;
+        width: 100%;
+        padding-top: 250px;
+    }
+
+}
+
+/* Md: 768px até 991px */
+@media (min-width: 768px) and (max-width: 991px) {}
+
+/* Lg e acima: 992px+ */
+@media (min-width: 992px) {}

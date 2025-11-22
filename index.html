@@ -10,33 +10,13 @@
 
 <body>
   <div class="UI_design">
-    <!-- 
-    ===================================================================
-    ÁREA PRINCIPAL DA INTERFACE (UI GERAL DO PAINEL)
-    Contém toda a estrutura visual do painel de atendimento estilizado 
-    como um jogo de luta (King of Fighters).
-    ===================================================================
-    -->
-
     <!--===========================================================-->
     <div class="main-content">
-      <!-- 
-        ===============================================================
-        SEÇÃO: CABEÇALHO E ACESSO RÁPIDO
-        Inclui o menu principal ("Team Select") e os links de acesso 
-        rápido ao estilo "Arcade Mode" (sistemas corporativos da Vivo/Telefônica).
-        ===============================================================
-      -->
+    <!--===========================================================-->
       <section>
         <div data-include="partials/header.html"></div>
       </section>
-      <!-- 
-        ===============================================================
-        SEÇÃO: CONTEÚDO PRINCIPAL DO PAINEL (DASHBOARDS E FERRAMENTAS)
-        Contém todos os módulos funcionais do agente de atendimento:
-        status, seleção de modo, relógio, reversão, shortcall, etc.
-        ===============================================================
-      -->
+    <!--===========================================================-->
       <section>
         <!-- STATUS DO AGENTE (AVATAR + PRODUTIVIDADE) -->
         <div data-include="partials/dashboard-status.html"></div>
@@ -47,21 +27,10 @@
       </footer>
     </div>
   </div>
-  <!-- 
-    ===================================================================
-    RODAPÉ GLOBAL DA PÁGINA
-    Informações gerais de copyright do site (pode ser unificado com o rodapé acima, se desejado).
-    ===================================================================
-  -->
-  <script src="./assets/js/rpgui.js"></script>
+
   <script type="module" src="./assets/js/index.js"></script>
-  <!-- 
-    ===================================================================
-    MECANISMO DE INCLUSÃO MODULAR (SIMULA HTML INCLUDES)
-    Carrega automaticamente os arquivos parciais (.html) referenciados 
-    pelo atributo `data-include`. Útil para manter o código limpo e reutilizável.
-    ===================================================================
-  -->
+    <!--===========================================================-->
+    
   <script>
     document.querySelectorAll('[data-include]').forEach(el => {
       const url = el.getAttribute('data-include');
@@ -92,7 +61,6 @@
       }
     };
   </script>
-  <!-- Carrega o perfil HTML -->
-</body>
 
+  </body>
 </html>

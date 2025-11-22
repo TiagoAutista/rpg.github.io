@@ -39,3 +39,12 @@
   top: 10px;
   left: 37%;
 }
+
+
+
+@media (min-width: 320px) {
+  .nav-footer-size {
+    height: 60px;
+    width: 100%;
+  }
+}

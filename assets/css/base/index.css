@@ -34,11 +34,15 @@ body {
     margin: 0 auto !important;
 }
 
+.justify-content-center {
+  justify-content: center !important;
+  padding-top: 10px !important;
+}
 
 /* =============================================================================
    3. ESTILOS DO CONTEÚDO main (INTERFACE GERAL)
    ============================================================================= */
-.teste{
+.teste {
     position: absolute !important;
     height: 500px;
     width: 80%;
@@ -232,53 +236,3 @@ h3 {
 /* =============================================================================
    6. RESPONSIVIDADE
    ============================================================================= */
-
-@media (min-width: 576px) {
-
-    .main-container-sm,
-    .main-container {
-        max-width: 540px;
-    }
-}
-
-@media (min-width: 768px) {
-
-    .main-container-md,
-    .main-container-sm,
-    .main-container {
-        max-width: 720px;
-    }
-}
-
-@media (min-width: 992px) {
-
-    .main-container-lg,
-    .main-container-md,
-    .main-container-sm,
-    .main-container {
-        max-width: 960px;
-    }
-}
-
-@media (min-width: 1200px) {
-
-    .main-container-xl,
-    .main-container-lg,
-    .main-container-md,
-    .main-container-sm,
-    .main-container {
-        max-width: 1140px;
-    }
-}
-
-@media (min-width: 1400px) {
-
-    .main-container-xxl,
-    .main-container-xl,
-    .main-container-lg,
-    .main-container-md,
-    .main-container-sm,
-    .main-container {
-        max-width: 1320px;
-    }
-}
