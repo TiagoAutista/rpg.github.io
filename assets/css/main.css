@@ -88,7 +88,7 @@ body {
 
 /* Container principal centralizado */
 .UI_design {
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -147,10 +147,11 @@ p, .text-body {
 .bg-secondary { background-color: var(--bg-secondary); }
 .bg-card {
   background-color: var(--bg-card);
-  border: 1px solid var(--border);
+  border: 4px solid white;
   border-radius: 12px;
   padding: 1.25rem;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow); 
+  
 }
 
 /* Botões */
