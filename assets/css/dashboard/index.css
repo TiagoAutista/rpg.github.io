@@ -1,0 +1,241 @@
+/* =============================================================================
+   3. PAINEL DE STATUS DO PERSONAGEM (INTEGRADO)
+   ============================================================================= */
+
+/* Container principal (fixo em desktop, empilhado em mobile) */
+.profile-size {
+  --panel-width: 320px;
+  --panel-gap: 1.5rem;
+
+  width: var(--panel-width);
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--panel-gap);
+  z-index: 1000;
+  font-size: 10px;
+  transform: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  contain: layout style;
+}
+
+/* Card principal do perfil */
+.user-profile-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 2px solid var(--accent-xp);
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+  font-family: 'Press Start 2P', cursive;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Frame do avatar (com moldura e badge) */
+.avatar-frame {
+  position: relative;
+  width: 48px; /* = 3em @ 16px */
+  height: 48px;
+}
+
+/* Imagem de fundo do avatar */
+.avatar-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Moldura decorativa (overlay) */
+.moldura-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 128px; /* = 8em */
+  height: auto;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Badge de nível */
+.level-badge {
+  position: absolute;
+  bottom: -8px;  /* = -0.5em */
+  right: -13px;  /* = -0.8em */
+  width: 25px;   /* = 2.8em */
+  height: 25px;
+  border-radius: 50%;
+  background: var(--accent-success);
+  border: 2px solid var(--bg-primary);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.55em;
+  font-weight: bold;
+  color: #1a1a2e;
+  text-shadow: 0 0 8px rgba(0, 255, 157, 0.8);
+  box-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+}
+
+/* Informações do usuário */
+.user-info {
+  flex: 1;
+  min-width: 120px;
+  color: var(--text-primary);
+}
+
+.username {
+  font-size: 1.125em;
+  font-weight: bold;
+  margin-bottom: 0.375em;
+  color: var(--accent-warning);
+  text-shadow: 0 0 8px rgba(255, 204, 0, 0.7);
+  letter-spacing: 1px;
+}
+
+/* Barra de progresso de XP */
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.75em;
+  color: var(--text-secondary);
+}
+
+.progress-bar {
+  flex: 1;
+  height: 6px; /* = 0.375em */
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--accent-xp);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-xp), var(--accent-level));
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.progress-value {
+  min-width: 60px; /* = 3.75em */
+  text-align: right;
+  font-size: 0.7em;
+  color: var(--text-secondary);
+}
+
+/* Botão de ação */
+.add-button {
+  background: transparent;
+  border: 2px solid var(--accent-xp);
+  border-radius: 8px;
+  width: 36px; /* = 2.25em */
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--accent-xp);
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.add-button:hover {
+  background: rgba(0, 255, 204, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+}
+
+.avatar-main {
+  width: 200px;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar-main-placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--bg-card);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  overflow: hidden; /* ✅ importante para imagens que ultrapassarem */
+}
+
+.avatar-main-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* ou "cover", dependendo do estilo desejado */
+  border-radius: 6px;
+}
+
+/* =============================================================================
+   RESPONSIVIDADE
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .profile-size {
+    position: static;
+    width: 100%;
+    max-width: var(--panel-width);
+    margin: 0 auto 2rem;
+    font-size: 12px;
+  }
+
+  .avatar-main-placeholder {
+    max-width: 140px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-size {
+    gap: 1rem;
+  }
+
+  .user-profile-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .user-info {
+    min-width: auto;
+  }
+
+  .progress-container {
+    justify-content: center;
+  }
+
+  .progress-value {
+    min-width: auto;
+    text-align: center;
+  }
+
+  .avatar-main {
+    width: 150px;
+    height: 180px;
+  }
+}

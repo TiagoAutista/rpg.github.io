@@ -1,36 +1,32 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel de Gerenciamento</title>
-  <link rel="stylesheet" href="./assets/css/index.css" type="text/css">
+  <title>PRV GAMER - [Seu Nome]</title>
+  <link rel="stylesheet" href="./assets/css/main.css" />
+  <link rel="stylesheet" href="./assets/css/home/index.css" />
 </head>
-
 <body>
-  <div class="UI_design">
-    <!--===========================================================-->
-    <div class="main-content">
-    <!--===========================================================-->
-      <section>
-        <div data-include="partials/header.html"></div>
-      </section>
-    <!--===========================================================-->
-      <section>
-        <!-- STATUS DO AGENTE (AVATAR + PRODUTIVIDADE) -->
+  <!-- Menu lateral (fora do fluxo principal) -->
+  <div data-include="partials/sidebar.html"></div>
+  <!-- Conteúdo principal -->
+  <div class="main-wrapper">
+    <div class="UI_design">
+      <div class="main-content">
+        <div class="main-nav main-container framed">
+          <div data-include="partials/header.html"></div>
+          <div data-include="partials/prv-section.html"></div>
+          <div data-include="partials/kpi-grid.html"></div>
+          <div data-include="partials/modules-section.html"></div>
+          <div data-include="partials/footer.html"></div>
+        </div>
         <div data-include="partials/dashboard-status.html"></div>
-        <div data-include="partials/nav-footer.html"></div>
-      </section>
-      <footer style="text-align: center; margin-top: 50px; font-size: 0.8em; color: #aaa;">
-        © 2025 KING OF FIGHTERS - TELEFÔNICA OPERATIONS
-      </footer>
+      </div>
     </div>
   </div>
 
-  <script type="module" src="./assets/js/index.js"></script>
-    <!--===========================================================-->
-    
+  <script src="./assets/js/index.js"></script>
   <script>
     document.querySelectorAll('[data-include]').forEach(el => {
       const url = el.getAttribute('data-include');
@@ -49,18 +45,8 @@
         });
     });
 
-    function fecharModalPerfil() {
-      document.getElementById('perfilModal').style.display = 'none';
-    }
-
-    // Fecha modal ao clicar fora dele (opcional)
-    window.onclick = function (event) {
-      const modal = document.getElementById('perfilModal');
-      if (event.target === modal) {
-        fecharModalPerfil();
-      }
-    };
+    
   </script>
 
-  </body>
+</body>
 </html>

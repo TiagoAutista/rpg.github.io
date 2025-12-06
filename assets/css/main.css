@@ -1,0 +1,293 @@
+/* 
+ * main.css
+ * Sistema de design centralizado: temas, tipografia, layout base e utilitários.
+ * Todos os @import devem vir primeiro — conforme especificação CSS.
+ */
+
+/* ==========================================================================
+   1. IMPORTS EXTERNOS
+   ========================================================================== */
+
+/* Fontes (removidos espaços extras nos URLs) */
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap");
+
+/* Módulos internos */
+@import "./index/index.css";
+@import "./menu-aside/index.css";
+@import "./home/index.css";
+@import "./nav-footer/index.css";
+@import "./dashboard/index.css";
+
+
+/* ==========================================================================
+   2. VARIÁVEIS DE TEMA
+   ========================================================================== */
+
+:root {
+  /* MODO NOTURNO (PADRÃO GAMER) */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #16213e;
+  --bg-card: #1a1a2e;
+  --text-primary: #00ffcc;     /* Ciano brilhante */
+  --text-secondary: #4ecdc4;   /* Turquesa */
+  --accent-xp: #00ffcc;
+  --accent-level: #00cc99;
+  --accent-success: #00ff9d;
+  --accent-warning: #ffcc00;
+  --accent-danger: #ff6b6b;
+  --border: #2d3748;
+  --scanline: rgba(0, 255, 204, 0.05);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.light-theme {
+  /* MODO CLARO (PROFISSIONAL) */
+  --bg-primary: #f0f0f0;
+  --bg-secondary: #e2e8f0;
+  --bg-card: #ffffff;
+  --text-primary: #2d3748;
+  --text-secondary: #718096;
+  --accent-xp: #3182ce;
+  --accent-level: #2c5282;
+  --accent-success: #38a169;
+  --accent-warning: #d69e2e;
+  --accent-danger: #e53e3e;
+  --border: #cbd5e0;
+  --scanline: rgba(0, 0, 0, 0.03);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+/* ==========================================================================
+   3. RESET E CONFIGURAÇÃO BASE
+   ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #000000 0%, #0a0410 30%, #12081a 100%);
+  background-color: var(--bg-primary); /* fallback */
+  color: var(--text-primary);
+  font-family: 'Press Start 2P', cursive; /* estilo arcade global */
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Container principal centralizado */
+.UI_design {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   4. TIPOGRAFIA
+   ========================================================================== */
+
+/* Títulos e elementos UI (arcade) */
+h1, h2, h3, h4, h5, h6,
+.arcade,
+.xp-value,
+.level-tag,
+.status-badge,
+.ui-title,
+.glitch-text {
+  font-family: 'Press Start 2P', cursive;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 0.75em;
+}
+
+h1 { font-size: 1.8rem; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.2rem; }
+h4, h5, h6 { font-size: 1rem; }
+
+/* Texto simbólico (ex: nomes, títulos sagrados) */
+.cinzel-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.5px;
+}
+
+/* Parágrafos e texto secundário */
+p, .text-body {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   5. UTILITÁRIOS VISUAIS
+   ========================================================================== */
+
+/* Cores de texto */
+.text-primary   { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-success   { color: var(--accent-success); }
+.text-warning   { color: var(--accent-warning); }
+.text-danger    { color: var(--accent-danger); }
+
+/* Fundos */
+.bg-primary   { background-color: var(--bg-primary); }
+.bg-secondary { background-color: var(--bg-secondary); }
+.bg-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+/* Botões */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--bg-card);
+  background-color: var(--accent-xp);
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+.btn-success { background-color: var(--accent-success); }
+.btn-warning { 
+  background-color: var(--accent-warning); 
+  color: #000; 
+}
+.btn-danger  { background-color: var(--accent-danger); }
+
+/* Layout */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.flex         { display: flex; }
+.flex-col     { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center  { justify-content: center; }
+.gap-2        { gap: 0.5rem; }
+.gap-4        { gap: 1rem; }
+.full-width   { width: 100%; }
+
+/* Centralização */
+.justify-content-center {
+  justify-content: center;
+  padding-top: 10px;
+}
+
+/* ==========================================================================
+   6. EFEITOS VISUAIS
+   ========================================================================== */
+
+/* Brilho ciano (para level, XP, etc.) */
+.glow {
+  text-shadow: 0 0 6px var(--text-primary), 0 0 12px var(--text-primary);
+}
+
+/* Scanline (efeito retro) */
+.scanline-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 2px,
+    var(--scanline) 2px,
+    var(--scanline) 3px
+  );
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.6;
+}
+
+/* ==========================================================================
+   7. LOADING & ERROS
+   ========================================================================== */
+
+.skeleton-loading {
+  background: linear-gradient(90deg, 
+    var(--bg-card) 25%, 
+    var(--bg-secondary) 50%, 
+    var(--bg-card) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.error-placeholder {
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px dashed var(--accent-danger);
+  color: var(--accent-danger);
+  border-radius: 8px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+}
+
+/* ==========================================================================
+   8. RESPONSIVIDADE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  body {
+    padding: 12px;
+  }
+
+  h1 { font-size: 1.4rem; }
+  h2 { font-size: 1.1rem; }
+  h3 { font-size: 1rem; }
+  .arcade, .xp-value { font-size: 0.8rem; }
+
+  .UI_design {
+    max-width: 100%;
+  }
+
+  .btn {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 1.2rem; }
+  .cinzel-title { font-size: 1.1rem; }
+}
