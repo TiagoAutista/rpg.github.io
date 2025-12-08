@@ -61,8 +61,8 @@ Se encontrar um bug ou tiver uma ideia, abra uma **Issue** ou um **Pull Request*
 ## 📬 Contato
 
 Desenvolvido por **Tiago Autista**  
-🔗 [LinkedIn](https://www.linkedin.com/in/seu-perfil)  
-📧 tiago.autista@email.com
+🔗 [LinkedIn](https://www.linkedin.com/in/tiago-cesar-6205803a0/)  
+📧 autistgonnaup@outlook.com
 
 ---
 
