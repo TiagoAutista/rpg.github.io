@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,9 +8,13 @@
   <link rel="stylesheet" href="./assets/css/main.css" />
   <link rel="stylesheet" href="./assets/css/home/index.css" />
 </head>
+
 <body>
-  <!-- Menu lateral (fora do fluxo principal) -->
-  <div data-include="partials/sidebar.html"></div>
+  <!-- Botão de toggle (fora do sidebar) -->
+  <button id="toggleSidebar" class="sidebar-toggle-btn" aria-label="Expandir menu lateral">➤</button>
+
+  <!-- Inclusão do sidebar -->
+  <div id="sidebar-placeholder" data-include="partials/sidebar.html"></div>
   <!-- Conteúdo principal -->
   <div class="main-wrapper">
     <div class="UI_design">
@@ -21,6 +26,8 @@
           <div data-include="partials/modules-section.html"></div>
           <div data-include="partials/footer.html"></div>
         </div>
+        <!-- Inclusão modular do painel de status -->
+        <!-- Botão de toggle para o painel do dashboard -->
         <div data-include="partials/dashboard-status.html"></div>
       </div>
     </div>
@@ -45,8 +52,12 @@
         });
     });
 
-    
+
   </script>
 
+  <!-- Conteúdo principal Module -->
+  <script type="module" src="./assets/js/index.js"></script>
+
 </body>
+
 </html>
