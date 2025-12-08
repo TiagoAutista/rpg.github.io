@@ -22,12 +22,13 @@
 }
 
 .main-content {
-    padding: 0;
+    position: absolute !important;
     margin: 0;
-    left: 0;
-    top: 0;
+    left: 400px;
+    top: 20px;
     overflow: hidden;
     font-size: 0.85em;
+    width: 800px;
 }
 
 .main-content * {
