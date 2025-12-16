@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Debug Tabela</title>
+
+</head>
+<body>
+  <h2>Ordens Cadastradas</h2>
+  <table id="orderList">
+    <thead>
+      <tr>
+        <th>PON</th>
+        <th>Técnico</th>
+        <th>Tipo</th>
+        <th>Data</th>
+        <th>Status</th>
+        <th>CPF/CNPJ</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Será preenchido -->
+    </tbody>
+  </table>
+
+  <script>
+    // Simula dados reais do seu localStorage
+    const ordens = JSON.parse(localStorage.getItem('ordens') || '[]')
+      .filter(o => o.ponOrdem);
+
+    const tbody = document.querySelector('#orderList tbody');
+    ordens.forEach(o => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${o.ponOrdem}</td>
+        <td>${o.tecnico || ''}</td>
+        <td>${o.descricao || ''}</td>
+        <td>${o.dataOrdem?.split('-').reverse().join('/') || ''}</td>
+        <td>${o.status || ''}</td>
+        <td>${o.cpfCnpj || ''}</td>
+        <td>🟢</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  </script>
+</body>
+</html>

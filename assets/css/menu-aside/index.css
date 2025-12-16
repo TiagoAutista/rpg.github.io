@@ -1,0 +1,205 @@
+/* ==========================================================================
+   SIDEBAR: Menu lateral estilo VS Code com tema arcano/gamer
+   ========================================================================== */
+
+/* 
+  1. CONTAINER EXTERNO: posicionamento fixo + efeito de borda dourada
+*/
+.sidebar-container {
+  position: fixed;
+  left: 165vh;
+  top: 40px;
+  width: 260px;
+  height: 80vh;
+  z-index: 900;
+  /* Borda dourada estilizada (ouro arcano) */
+  border: 4px solid white;
+  border-radius: 12px;
+  background: linear-gradient(
+    45deg,
+    rgba(212, 175, 55, 0.9),
+    rgba(150, 110, 30, 1),
+    rgba(212, 175, 55, 0.9)
+  );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow:
+    inset 0 0 10px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(150, 110, 30, 0.3);
+
+  /* Animação suave para esconder/mostrar */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Estado durante animação de saída */
+.sidebar-container.hiding {
+  transform: translateX(-260px);
+  opacity: 0;
+}
+
+/* Quando realmente oculto (via atributo HTML) */
+.sidebar-container[hidden] {
+  display: none !important;
+}
+
+/*
+  2. CONTEÚDO INTERNO
+*/
+.sidebar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border-radius: 8px;
+  backdrop-filter: blur(2px);
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.sidebar-header {
+  padding: 0 0 2.5rem;
+  border-bottom: 2px solid var(--accent-xp);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.sidebar-title {
+  font-size: 1.1rem;
+  color: #e8d8b3;
+  letter-spacing: 1px;
+  margin: 0;
+  font-family: 'Press Start 2P', cursive;
+  font-weight: 700;
+}
+
+.sidebar-nav {
+  flex: 1;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.65rem 0.1rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.25s ease;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  border-radius: 8px;
+}
+
+.sidebar-link:hover,
+.sidebar-link[aria-current="page"] {
+  color: var(--text-primary);
+  background: var(--bg-card);
+  text-shadow: 0 0 6px var(--text-primary);
+  transform: translateX(4px);
+}
+
+.link-icon {
+  font-size: 1.2rem;
+}
+
+.theme-toggle {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--accent-xp);
+}
+
+.theme-toggle .btn {
+  width: 100%;
+  font-size: 0.8rem;
+}
+
+/*
+  3. BOTÃO DE TOGGLE
+*/
+.sidebar-toggle-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  padding: 0.4rem 0.6rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1rem;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.light-theme .sidebar-toggle-btn {
+  background: #ffffff;
+  color: #2d3748;
+  border-color: #cbd5e0;
+}
+
+/*
+  4. CONTEÚDO PRINCIPAL
+*/
+.main-content {
+  margin-left: 0px; /* 260px (sidebar) + 40px (offset left) */
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Ajusta margem quando o sidebar está visível */
+.sidebar-container:not([hidden]) ~ .main-content {
+  margin-left: 300px;
+}
+
+/* Remove margem quando oculto */
+.sidebar-container[hidden] ~ .main-content {
+  margin-left: 0;
+}
+
+/*
+  5. RESPONSIVIDADE
+*/
+@media (max-width: 768px) {
+  .sidebar-container {
+    left: 10px;
+    width: 240px;
+    height: 75vh;
+    /* Não define transform aqui — deixa para a classe .hiding ou estado visível */
+  }
+
+  .sidebar-toggle-btn {
+    left: 10px;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 16px; /* corrigido: estava 160px */
+  }
+
+  /* Garante que o estado "visível" em mobile funcione */
+  .sidebar-container:not([hidden]) {
+    transform: translateX(0);
+  }
+
+  /* Animação de saída em mobile */
+  .sidebar-container.hiding {
+    transform: translateX(-240px);
+    opacity: 0;
+  }
+}

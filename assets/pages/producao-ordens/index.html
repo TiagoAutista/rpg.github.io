@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CLIENT SELECT - Cadastro de Clientes</title>
+    <style>
+        /* Estilos base RPGUI (simulando o rpgui.css) */
+        body {
+            background: #1a1a2e url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231a1a2e"/><path d="M0 0L100 100M100 0L0 100" stroke="%232a2a4e" stroke-width="1"/></svg>') repeat;
+            color: #e0e0ff;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.modo-acessivel {
+            background: #ffffff !important;
+            color: #000000 !important;
+        }
+
+        .rpgui-container.framed {
+            background: rgba(10, 10, 30, 0.85);
+            border: 4px solid #4a5568;
+            border-image: repeating-linear-gradient(45deg, #553c9a, #553c9a 10px, #2d1b69 10px, #2d1b69 20px) 10;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+        }
+
+        .rpgui-nav-title {
+            color: gold;
+            font-size: 1.6em;
+            text-align: center;
+            margin-bottom: 12px;
+            text-shadow: 0 0 6px black;
+        }
+
+        .rpgui-nav-list {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            gap: 16px;
+        }
+
+        .rpgui-nav-item a {
+            color: #a0a0ff;
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .rpgui-nav-item a:hover,
+        .rpgui-nav-item a.active {
+            color: white;
+            border-color: gold;
+            background: rgba(80, 60, 180, 0.3);
+        }
+
+        body.modo-acessivel .rpgui-nav-item a {
+            color: #000 !important;
+            border-color: #000 !important;
+        }
+
+        .main-input {
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0 12px;
+            border: 1px solid #555;
+            background: rgba(20, 20, 40, 0.8);
+            color: white;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        body.modo-acessivel .main-input {
+            background: #fff !important;
+            color: #000 !important;
+            border-color: #000 !important;
+        }
+
+        .main-button {
+            position: relative;
+            margin: 6px 4px;
+            padding: 10px 16px;
+            font-weight: bold;
+            font-size: 0.95em;
+            color: white;
+            background: linear-gradient(135deg, #2c1e5f, #1a103a);
+            border: 2px solid #8a7bff;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        body.modo-acessivel .main-button {
+            color: #000 !important;
+            border-color: #000 !important;
+        }
+
+        .main-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 10px rgba(138, 123, 255, 0.6);
+        }
+
+        .btn-cadastrar {
+            background: linear-gradient(135deg, #c00, #800);
+            border-color: #ff6666;
+        }
+
+        .btn-limpar {
+            background: linear-gradient(135deg, #a00, #600);
+            border-color: #ff4444;
+        }
+
+        .btn-exportar {
+            background: linear-gradient(135deg, #0066cc, #003366);
+            border-color: #4da6ff;
+        }
+
+        .btn-importar {
+            background: linear-gradient(135deg, #008000, #004d00);
+            border-color: #66ff66;
+        }
+
+        .btn-loading {
+            opacity: 0.6;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        #clientList {
+            width: 100%;
+            margin-top: 16px;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        #clientList th,
+        #clientList td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+
+        #clientList th {
+            background: rgba(30, 30, 60, 0.9);
+            color: gold;
+        }
+
+        body.modo-acessivel #clientList th {
+            color: #000 !important;
+            background: #eee !important;
+        }
+
+        #clientList tbody tr:hover {
+            background: rgba(50, 50, 100, 0.5);
+        }
+
+        .excluir-btn {
+            color: #ff5555;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 8px;
+            display: inline-block;
+        }
+
+        .search-box {
+            margin: 15px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            max-width: none;
+        }
+
+        .message-success {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .message-error {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        #historicoLog,
+        #resultadoBuscaHistorico {
+            margin-top: 20px;
+            font-size: 0.85em;
+            color: #aaa;
+        }
+
+        body.modo-acessivel #historicoLog,
+        body.modo-acessivel #resultadoBuscaHistorico {
+            color: #555 !important;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.85em;
+            color: #ccc;
+            text-shadow: 0 0 4px black;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Input oculto para importação -->
+    <input type="file" id="fileImport" accept=".json" style="display: none;" />
+
+    <div class="rpg-ui">
+        <div class="rpgui-content">
+            <header>
+                <nav class="rpgui-container framed" style="height: 120px; width: 80%; margin: 0 auto;">
+                    <div class="rpgui-nav-title">CLIENT SELECT</div>
+                    <ul class="rpgui-nav-list">
+                        <li class="rpgui-nav-item"><a class="active" href="/index.html">HOME</a></li>
+                        <li class="rpgui-nav-item"><a href="#">SOBRE</a></li>
+                        <li class="rpgui-nav-item"><a href="#">PROJETO</a></li>
+                        <li class="rpgui-nav-item"><a href="#">ACESSOS</a></li>
+                        <li class="rpgui-nav-item"><a href="#">TELEFÔNICA</a></li>
+                    </ul>
+                </nav>
+            </header>
+
+            <main class="rpgui-container framed" style="width: 80%; margin: 20px auto; padding: 20px;">
+                <h2 class="rpgui-title" style="color: gold; text-align: center;">CADASTRO DE CLIENTES</h2>
+
+                <!-- BUSCA AVANÇADA -->
+                <div class="search-box">
+                    <input type="text" class="main-input" id="searchInput" placeholder="Buscar por PON, CPF ou data (ex: 04/12/2025)..." />
+                    <button id="searchBtn" class="main-button" style="padding:10px;">Buscar</button>
+                    <button id="clearSearchBtn" class="main-button btn-limpar" style="padding:10px;">Limpar</button>
+                </div>
+
+                <form id="clientForm">
+                    <input type="text" class="main-input" id="pon" placeholder="PON (ex: PON12345)" required />
+                    <input type="text" class="main-input" id="cpf" placeholder="CPF (ex: 123.456.789-01)" required />
+                    <input type="date" class="main-input" id="dataCriacao" required />
+                    <button type="submit" class="main-button btn-cadastrar">Cadastrar</button>
+                    <button id="btnContarPorData">Contar Ordens por Data</button>
+                    <div id="resultadoContagem"></div>
+                    <button type="button" id="cancelEditBtn" class="main-button"
+                        style="display:none; background: linear-gradient(to bottom, #555, #333);">
+                        Cancelar
+                    </button>
+                </form>
+
+                <div style="margin-top: 25px; text-align: center;">
+                    <button id="importBtn" class="main-button btn-importar">Importar do JSON</button>
+                    <button id="clearBtn" class="main-button btn-limpar">Limpar Dados</button>
+                    <button id="exportBtn" class="main-button btn-exportar">Exportar JSON</button>
+                    <button id="toggleA11y" class="main-button"
+                        style="margin-top:10px; font-size:0.85em; padding:6px 12px;">
+                        Modo Acessível
+                    </button>
+                </div>
+                <div style="margin-top: 20px;">
+                    <input type="date" id="buscarData" class="main-input" />
+                    <button id="buscarBtn" class="main-button">Buscar Histórico por Data</button>
+                </div>
+                <table id="clientList" role="table" aria-label="Lista de clientes cadastrados">
+                    <thead>
+                        <tr>
+                            <th>PON</th>
+                            <th>CPF</th>
+                            <th>Data de Criação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <div id="message" style="margin-top: 15px; min-height: 24px;"></div>
+                <div id="historicoLog"></div>
+                <div id="resultadoBuscaHistorico"></div>
+            </main>
+
+            <footer>
+                © 2025 YOUR COMPANY - TELEFÔNICA OPERATIONS
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        let clients = []; // Agora carregado do registro unificado
+        let editingPON = null;
+        let historico = JSON.parse(localStorage.getItem('clients_historico')) || [];
+        let backupInterval = null;
+        let currentFilter = ''; // Armazena o filtro atual
+
+        // =============== UTILITÁRIOS ===============
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/[^\d]/g, '');
+            if (cpf.length !== 11) return false;
+            if (/^(\d)\1{10}$/.test(cpf)) return false;
+
+            let sum = 0;
+            for (let i = 0; i < 9; i++) sum += parseInt(cpf.charAt(i)) * (10 - i);
+            let rev = 11 - (sum % 11);
+            if (rev === 10 || rev === 11) rev = 0;
+            if (rev !== parseInt(cpf.charAt(9))) return false;
+
+            sum = 0;
+            for (let i = 0; i < 10; i++) sum += parseInt(cpf.charAt(i)) * (11 - i);
+            rev = 11 - (sum % 11);
+            if (rev === 10 || rev === 11) rev = 0;
+            return rev === parseInt(cpf.charAt(10));
+        }
+
+        function displayMessage(msg, type) {
+            const el = document.getElementById('message');
+            el.textContent = msg;
+            el.className = type === 'success' ? 'message-success' : 'message-error';
+            setTimeout(() => {
+                el.textContent = '';
+                el.className = '';
+            }, 3000);
+        }
+
+        function setLoading(button, isLoading, originalText) {
+            if (isLoading) {
+                button.classList.add('btn-loading');
+                button.disabled = true;
+                button.textContent = 'Aguarde...';
+            } else {
+                button.classList.remove('btn-loading');
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('clientForm').reset();
+            editingPON = null;
+            document.querySelector('#clientForm .btn-cadastrar').textContent = 'Cadastrar';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+        }
+
+        // =============== HISTÓRICO ===============
+        function adicionarAoHistorico(acao) {
+            const entrada = `${new Date().toLocaleString('pt-BR')} - ${acao}`;
+            historico.unshift(entrada);
+            historico = historico.slice(0, 10);
+            localStorage.setItem('clients_historico', JSON.stringify(historico));
+            atualizarHistoricoUI();
+        }
+
+        function agruparHistoricoPorData() {
+            const historicoAgrupado = {};
+            historico.forEach(entry => {
+                const [dataPart] = entry.split(' - ');
+                const dateKey = dataPart.split(',')[0];
+                if (!historicoAgrupado[dateKey]) historicoAgrupado[dateKey] = [];
+                historicoAgrupado[dateKey].push(entry.split(' - ')[1] || '');
+            });
+            return historicoAgrupado;
+        }
+
+        function atualizarHistoricoUI() {
+            const div = document.getElementById('historicoLog');
+            const historicoAgrupado = agruparHistoricoPorData();
+            const hoje = new Date().toLocaleDateString('pt-BR');
+            let html = '<strong>Últimas ações:</strong><br>';
+            for (const [data, acoes] of Object.entries(historicoAgrupado)) {
+                const quantidadeAcoes = acoes.length;
+                const estiloHoje = data === hoje ? 'style="color: green; font-weight: bold;"' : '';
+                html += `<strong ${estiloHoje}>${data} (${quantidadeAcoes} ação(s))</strong><br>${acoes.join('<br>')}<br>`;
+            }
+            div.innerHTML = html || 'Nenhuma ação registrada.';
+        }
+
+        // =============== EXCLUSÃO ===============
+        function excluirCliente(pon) {
+            if (!confirm(`Deseja excluir o cliente com PON ${pon}?`)) return;
+            
+            // Remove do registro unificado
+            let registros = JSON.parse(localStorage.getItem('registro_unificado') || '[]');
+            registros = registros.filter(r => r.pon !== pon);
+            localStorage.setItem('registro_unificado', JSON.stringify(registros));
+            
+            // Recarrega clientes
+            carregarClientesAtivos();
+            resetForm();
+            displayClients();
+            displayMessage('Cliente excluído com sucesso!', 'success');
+            adicionarAoHistorico(`Excluído: ${pon}`);
+        }
+
+        // =============== EDIÇÃO ===============
+        function iniciarEdicao(pon) {
+            const client = clients.find(c => c.pon === pon);
+            if (!client) return;
+            document.getElementById('pon').value = client.pon;
+            document.getElementById('cpf').value = client.cpf;
+            document.getElementById('dataCriacao').value = client.dataCriacao;
+            editingPON = client.pon;
+            document.querySelector('#clientForm .btn-cadastrar').textContent = 'Atualizar';
+            document.getElementById('cancelEditBtn').style.display = 'inline-block';
+        }
+
+        // =============== EXIBIÇÃO DA LISTA ===============
+        function displayClients(filtered = null) {
+            const tbody = document.querySelector('#clientList tbody');
+            const dataToDisplay = filtered !== null ? filtered : clients;
+            tbody.innerHTML = '';
+
+            if (dataToDisplay.length === 0) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 4;
+                td.style.textAlign = 'center';
+                td.style.padding = '12px';
+                td.textContent = 'Nenhum cliente encontrado.';
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+                return;
+            }
+
+            dataToDisplay.forEach(client => {
+                const tr = document.createElement('tr');
+
+                const tdPon = document.createElement('td');
+                tdPon.textContent = client.pon;
+
+                const tdCpf = document.createElement('td');
+                tdCpf.textContent = client.cpf;
+
+                const tdData = document.createElement('td');
+                tdData.textContent = client.dataCriacao;
+
+                const tdAcoes = document.createElement('td');
+
+                const editBtn = document.createElement('button');
+                editBtn.className = 'main-button';
+                editBtn.style.cssText = 'padding:4px 8px; font-size:0.8em; margin-right:6px;';
+                editBtn.textContent = 'Editar';
+                editBtn.onclick = () => iniciarEdicao(client.pon);
+
+                const excluirSpan = document.createElement('span');
+                excluirSpan.className = 'excluir-btn';
+                excluirSpan.setAttribute('aria-label', `Excluir cliente ${client.pon}`);
+                excluirSpan.textContent = '🗑️';
+                excluirSpan.style.cursor = 'pointer';
+                excluirSpan.onclick = () => excluirCliente(client.pon);
+
+                tdAcoes.appendChild(editBtn);
+                tdAcoes.appendChild(excluirSpan);
+                tr.appendChild(tdPon);
+                tr.appendChild(tdCpf);
+                tr.appendChild(tdData);
+                tr.appendChild(tdAcoes);
+                tbody.appendChild(tr);
+            });
+        }
+
+        // =============== BUSCA AVANÇADA ===============
+        function buscarClientes(termo) {
+            if (!termo.trim()) {
+                displayClients();
+                currentFilter = '';
+                return;
+            }
+            
+            const termoLimpo = termo.toLowerCase().replace(/[\/\s]/g, '');
+            
+            const resultados = clients.filter(client => {
+                const ponMatch = client.pon.toLowerCase().includes(termo.toLowerCase());
+                const cpfMatch = client.cpf.replace(/\D/g, '').includes(termo.replace(/\D/g, ''));
+                
+                // Busca por data no formato DD/MM/YYYY
+                const [dia, mes, ano] = termo.split('/');
+                let dataMatch = false;
+                if (dia && mes && ano && ano.length === 4) {
+                    const dataISO = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+                    dataMatch = client.dataCriacao === dataISO;
+                } else if (termo.match(/^\d{8}$/)) {
+                    // Busca por data compacta: 04122025
+                    const d = termo.substring(0,2);
+                    const m = termo.substring(2,4);
+                    const y = termo.substring(4,8);
+                    const dataISO = `${y}-${m}-${d}`;
+                    dataMatch = client.dataCriacao === dataISO;
+                }
+                
+                return ponMatch || cpfMatch || dataMatch;
+            });
+            
+            displayClients(resultados);
+            currentFilter = termo;
+        }
+
+        // =============== SUBMISSÃO ===============
+        document.getElementById('clientForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const pon = document.getElementById('pon').value.trim();
+            const cpf = document.getElementById('cpf').value.trim();
+            const dataCriacao = document.getElementById('dataCriacao').value.trim();
+
+            if (!validarCPF(cpf)) {
+                return displayMessage('CPF inválido! Verifique o número.', 'error');
+            }
+
+            if (!pon || !dataCriacao) {
+                return displayMessage('PON e Data de Criação são obrigatórios.', 'error');
+            }
+
+            // Salvar no registro unificado
+            let registros = JSON.parse(localStorage.getItem('registro_unificado') || '[]');
+            const index = registros.findIndex(r => r.pon === pon && r.dataCriacao === dataCriacao);
+            
+            if (index >= 0) {
+                // Atualiza
+                registros[index] = { ...registros[index], cpf, statusOrdem: 'concluida' };
+                adicionarAoHistorico(`Atualizado: ${pon}`);
+            } else {
+                // Adiciona novo
+                registros.push({ pon, cpf, dataCriacao, statusOrdem: 'concluida', timestamp: new Date().toISOString() });
+                adicionarAoHistorico(`Cadastrado: ${pon}`);
+            }
+            
+            localStorage.setItem('registro_unificado', JSON.stringify(registros));
+            carregarClientesAtivos();
+            resetForm();
+            displayClients();
+            displayMessage(index >= 0 ? 'Atualizado com sucesso!' : 'Cadastrado com sucesso!', 'success');
+        });
+
+        // =============== IMPORTAÇÃO ===============
+        document.getElementById('importBtn').addEventListener('click', () => {
+            document.getElementById('fileImport').click();
+        });
+
+        document.getElementById('fileImport').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            const btn = document.getElementById('importBtn');
+            const orig = btn.textContent;
+            setLoading(btn, true, orig);
+
+            reader.onload = function () {
+                try {
+                    const data = JSON.parse(reader.result);
+                    if (!Array.isArray(data)) throw new Error('Esperado um array.');
+                    
+                    let registros = JSON.parse(localStorage.getItem('registro_unificado') || '[]');
+                    const novos = data.filter(c => c.pon && c.cpf && c.dataCriacao)
+                                      .filter(n => !registros.some(r => r.pon === n.pon && r.dataCriacao === n.dataCriacao));
+                    
+                    novos.forEach(n => {
+                        registros.push({ 
+                            ...n, 
+                            statusOrdem: 'concluida',
+                            timestamp: new Date().toISOString() 
+                        });
+                    });
+                    
+                    localStorage.setItem('registro_unificado', JSON.stringify(registros));
+                    carregarClientesAtivos();
+                    displayClients();
+                    displayMessage(`Importado(s): ${novos.length} cliente(s) novo(s)!`, 'success');
+                    adicionarAoHistorico(`Importados: ${novos.length} clientes`);
+                } catch (err) {
+                    displayMessage('Erro ao importar: ' + (err.message || 'Arquivo inválido'), 'error');
+                } finally {
+                    setLoading(btn, false, orig);
+                    e.target.value = '';
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        // =============== EXPORTAÇÃO ===============
+        document.getElementById('exportBtn').addEventListener('click', function () {
+            const btn = this;
+            const orig = btn.textContent;
+            setLoading(btn, true, orig);
+            setTimeout(() => {
+                const blob = new Blob([JSON.stringify(clients, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `clientes_${new Date().toISOString().slice(0, 10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                displayMessage('Exportado com sucesso!', 'success');
+                setLoading(btn, false, orig);
+            }, 200);
+        });
+
+        // =============== LIMPAR ===============
+        document.getElementById('clearBtn').addEventListener('click', function () {
+            if (confirm('Apagar todos os clientes? Esta ação não pode ser desfeita.')) {
+                const btn = this;
+                const orig = btn.textContent;
+                setLoading(btn, true, orig);
+                setTimeout(() => {
+                    localStorage.removeItem('registro_unificado');
+                    clients = [];
+                    resetForm();
+                    displayClients();
+                    displayMessage('Todos os dados foram apagados.', 'success');
+                    adicionarAoHistorico('Todos os clientes apagados');
+                    setLoading(btn, false, orig);
+                }, 300);
+            }
+        });
+
+        // =============== MODO ACESSÍVEL ===============
+        function alternarModoAcessivel() {
+            document.body.classList.toggle('modo-acessivel');
+            localStorage.setItem('modoAcessivel', document.body.classList.contains('modo-acessivel'));
+        }
+        document.getElementById('toggleA11y').addEventListener('click', alternarModoAcessivel);
+
+        // =============== ATALHOS ===============
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                document.getElementById('clientForm').dispatchEvent(new Event('submit'));
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'l') {
+                e.preventDefault();
+                resetForm();
+            }
+            if (e.key === 'Escape' && editingPON) {
+                resetForm();
+            }
+            if (e.key === 'f' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+        });
+
+        // =============== CONTAGEM POR DATA ===============
+        document.getElementById('btnContarPorData').addEventListener('click', function () {
+            const contagemPorData = contarOrdensPorData();
+            exibirResultado(contagemPorData);
+        });
+
+        function contarOrdensPorData() {
+            const contagem = {};
+            clients.forEach(client => {
+                const [ano, mes, dia] = client.dataCriacao.split('-');
+                const dataFormatada = `${dia}/${mes}/${ano}`;
+                contagem[dataFormatada] = (contagem[dataFormatada] || 0) + 1;
+            });
+            return contagem;
+        }
+
+        function exibirResultado(contagem) {
+            const resultadoDiv = document.getElementById('resultadoContagem');
+            resultadoDiv.innerHTML = '';
+            const hoje = new Date().toLocaleDateString('pt-BR');
+            let totalOrdens = 0;
+            let ordensDoDia = 0;
+
+            for (const [data, total] of Object.entries(contagem)) {
+                if (data === hoje) ordensDoDia = total;
+                totalOrdens += total;
+            }
+
+            const fragment = document.createDocumentFragment();
+            if (ordensDoDia > 0) {
+                const p1 = document.createElement('p');
+                p1.textContent = `Data: ${hoje} - Total de ordens: ${ordensDoDia}`;
+                fragment.appendChild(p1);
+            } else {
+                const p1 = document.createElement('p');
+                p1.textContent = `Nenhuma ordem registrada para hoje.`;
+                fragment.appendChild(p1);
+            }
+            const p2 = document.createElement('p');
+            p2.textContent = `Total de ordens feitas: ${totalOrdens}`;
+            fragment.appendChild(p2);
+            resultadoDiv.appendChild(fragment);
+        }
+
+        // =============== BUSCAR HISTÓRICO POR DATA ===============
+        document.getElementById('buscarBtn').addEventListener('click', function () {
+            const dataBuscada = document.getElementById('buscarData').value;
+            if (dataBuscada) {
+                const registrosFiltrados = buscarHistoricoPorData(dataBuscada);
+                exibirHistorico(registrosFiltrados);
+            } else {
+                displayMessage('Por favor, insira uma data.', 'error');
+            }
+        });
+
+        function buscarHistoricoPorData(dataISO) {
+            const dataBusca = new Date(dataISO);
+            const dia = String(dataBusca.getDate()).padStart(2, '0');
+            const mes = String(dataBusca.getMonth() + 1).padStart(2, '0');
+            const ano = dataBusca.getFullYear();
+            const dataFormatadaBusca = `${dia}/${mes}/${ano}`;
+
+            return historico.filter(entry => {
+                const dataNoHistorico = entry.split(',')[0];
+                return dataNoHistorico === dataFormatadaBusca;
+            });
+        }
+
+        function exibirHistorico(registros) {
+            const div = document.getElementById('resultadoBuscaHistorico');
+            if (registros.length > 0) {
+                const safeHtml = registros.map(r =>
+                    r.replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                ).join('<br>');
+                div.innerHTML = '<strong>Resultados da busca:</strong><br>' + safeHtml;
+            } else {
+                div.innerHTML = 'Nenhuma ação registrada para a data informada.';
+            }
+        }
+
+        // =============== INICIALIZAÇÃO ===============
+        function carregarClientesAtivos() {
+            const registros = JSON.parse(localStorage.getItem('registro_unificado') || '[]');
+            clients = registros.filter(r =>
+                r.statusOrdem === 'concluida' &&
+                r.cpf &&
+                validarCPF(r.cpf)
+            ).map(r => ({
+                pon: r.pon,
+                cpf: r.cpf,
+                dataCriacao: r.dataCriacao
+            }));
+        }
+
+        // Atualização em tempo real
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'registro_unificado') {
+                carregarClientesAtivos();
+                displayClients();
+                atualizarHistoricoUI();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('modoAcessivel') === 'true') {
+                document.body.classList.add('modo-acessivel');
+            }
+            
+            carregarClientesAtivos();
+            displayClients();
+            atualizarHistoricoUI();
+            
+            // Iniciar backup a cada 5 minutos
+            backupInterval = setInterval(() => {
+                const agora = new Date();
+                const ts = `${agora.getFullYear()}${String(agora.getMonth() + 1).padStart(2, '0')}${String(agora.getDate()).padStart(2, '0')}`;
+                localStorage.setItem(`clients_backup_${ts}`, JSON.stringify(clients));
+            }, 5 * 60 * 1000);
+            
+            document.getElementById('pon').focus();
+        });
+
+        // =============== BUSCA =================
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            const termo = document.getElementById('searchInput').value;
+            buscarClientes(termo);
+        });
+
+        document.getElementById('searchInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                buscarClientes(e.target.value);
+            }
+        });
+
+        document.getElementById('clearSearchBtn').addEventListener('click', () => {
+            document.getElementById('searchInput').value = '';
+            displayClients();
+            currentFilter = '';
+        });
+    </script>
+</body>
+
+</html>

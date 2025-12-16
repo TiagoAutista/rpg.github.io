@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Ordens - v3.0 (Integrado)</title>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --success: #28a745;
+            --danger: #e74c3c;
+            --warning: #ffc107;
+            --light: #f8f9fa;
+            --dark: #343a40;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--light);
+            color: #333;
+        }
+
+        .online-status {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            z-index: 3000;
+        }
+        .online { background-color: var(--success); }
+        .offline { background-color: var(--danger); }
+
+        h1, h2, h3 {
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .stats {
+            background: #e8f4fc;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        label {
+            font-weight: bold;
+            margin: 8px 0 5px;
+            display: block;
+        }
+
+        input[type="text"], input[type="date"] {
+            padding: 12px;
+            width: 100%;
+            max-width: 350px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin: 6px 4px;
+        }
+
+        button:hover { background-color: #0d5bb8; }
+        button.secondary { background-color: #6c757d; }
+        button.danger { background-color: var(--danger); }
+        button.success { background-color: var(--success); }
+
+        .ordem-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .ordem-text {
+            font-size: 16px;
+            color: #333;
+            flex-grow: 1;
+        }
+
+        .ordem-text.concluida {
+            text-decoration: line-through;
+            color: #777;
+        }
+
+        .button-container { display: flex; gap: 6px; }
+
+        #modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+        }
+
+        #modal-content {
+            background: white;
+            margin: 8% auto;
+            padding: 24px;
+            width: 92%;
+            max-width: 480px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .close:hover { color: #333; }
+
+        .modal-actions { margin-top: 20px; display: flex; gap: 10px; }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 14px;
+            margin-top: -8px;
+            margin-bottom: 12px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="online-status offline" id="onlineStatus">Offline</div>
+    <h1>Gerenciar Ordens (PONs) - Integrado</h1>
+
+    <div class="stats" id="stats">Carregando...</div>
+
+    <label for="nova-ordem">Nova Ordem (PON):</label>
+    <input type="text" id="nova-ordem" placeholder="Ex: PON12345" />
+    <button id="add-button">Cadastrar Ordem</button>
+
+    <div style="margin: 15px 0; display: flex; flex-wrap: wrap; gap: 8px;">
+        <button id="import-button">Importar JSON</button>
+        <button id="export-excel">Exportar Relatório (Excel)</button>
+        <button id="clear-button" class="danger">Apagar Todas</button>
+    </div>
+
+    <button id="sequencial-button">Gerar Ordens Sequenciais</button>
+    <h2>Ordens Cadastradas</h2>
+    <div id="ordens-container"></div>
+
+    <!-- Modal -->
+    <div id="modal" role="dialog">
+        <div id="modal-content">
+            <span class="close">&times;</span>
+            <h2>Concluir Ordem</h2>
+            
+            <div>
+                <label>PON:</label>
+                <input type="text" id="modal-pon" readonly />
+            </div>
+            
+            <div>
+                <label for="modal-cpf">CPF:</label>
+                <input type="text" id="modal-cpf" placeholder="000.000.000-00" maxlength="14" />
+                <div id="cpf-error" class="error-message sr-only"></div>
+            </div>
+            
+            <div>
+                <label for="modal-data">Data de Criação:</label>
+                <input type="date" id="modal-data" />
+                <div id="data-error" class="error-message sr-only"></div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="confirm-button" class="success">Salvar e Concluir</button>
+                <button id="skip-button" class="secondary">Pular</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================== UTILITÁRIOS ==================
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/\D/g, '');
+            if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+            let sum = 0;
+            for (let i = 0; i < 9; i++) sum += parseInt(cpf.charAt(i)) * (10 - i);
+            let rev = 11 - (sum % 11);
+            if (rev === 10 || rev === 11) rev = 0;
+            if (rev !== parseInt(cpf.charAt(9))) return false;
+            sum = 0;
+            for (let i = 0; i < 10; i++) sum += parseInt(cpf.charAt(i)) * (11 - i);
+            rev = 11 - (sum % 11);
+            if (rev === 10 || rev === 11) rev = 0;
+            return rev === parseInt(cpf.charAt(10));
+        }
+
+        function formatarCPF(cpf) {
+            cpf = cpf.replace(/\D/g, '');
+            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        }
+
+        function safeStorageGet(key, fallback = []) {
+            try {
+                return JSON.parse(localStorage.getItem(key)) || fallback;
+            } catch (e) {
+                console.error('Erro ao ler do localStorage:', e);
+                return fallback;
+            }
+        }
+
+        function safeStorageSet(key, data) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+                // Dispara evento 'storage' manualmente para abas atuais
+                window.dispatchEvent(new StorageEvent('storage', {
+                    key: key,
+                    newValue: JSON.stringify(data)
+                }));
+                return true;
+            } catch (e) {
+                console.error('Erro ao salvar no localStorage:', e);
+                return false;
+            }
+        }
+
+        // ================== ESTRUTURA UNIFICADA ==================
+        // Carrega ordens a partir do registro unificado
+        function carregarOrdensDoRegistro() {
+            const registros = safeStorageGet('registro_unificado');
+            return registros.map(r => ({
+                ordem: r.pon,
+                feito: r.statusOrdem === 'concluida'
+            })).filter(r => r.ordem);
+        }
+
+        function salvarNoRegistroUnificado(pon, cpf, dataCriacao) {
+            let registros = safeStorageGet('registro_unificado');
+            
+            // Encontra ou cria registro
+            const index = registros.findIndex(r => r.pon === pon);
+            const novoRegistro = {
+                pon,
+                cpf,
+                dataCriacao,
+                statusOrdem: 'concluida',
+                timestamp: new Date().toISOString()
+            };
+            
+            if (index >= 0) {
+                registros[index] = novoRegistro;
+            } else {
+                registros.push(novoRegistro);
+            }
+            
+            // Salva no localStorage unificado
+            return safeStorageSet('registro_unificado', registros);
+        }
+
+        // ================== ESTADO ==================
+        let ordens = carregarOrdensDoRegistro();
+        let ordemAtualIndex = 0;
+        const modal = document.getElementById("modal");
+        const modalPon = document.getElementById("modal-pon");
+        const modalCpf = document.getElementById("modal-cpf");
+        const modalData = document.getElementById("modal-data");
+        const cpfError = document.getElementById("cpf-error");
+        const dataError = document.getElementById("data-error");
+
+        // ================== CPF MASK ==================
+        modalCpf.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '').substring(0, 11);
+            e.target.value = value ? formatarCPF(value) : '';
+        });
+
+        // ================== FUNÇÕES DE UI ==================
+        function atualizarEstatisticas() {
+            const total = ordens.length;
+            const concluidas = ordens.filter(o => o.feito).length;
+            document.getElementById('stats').textContent = 
+                `Total: ${total} | Concluídas: ${concluidas} (${total ? Math.round((concluidas/total)*100) : 0}%)`;
+        }
+
+        function mostrarErro(elemento, erroDiv, mensagem) {
+            elemento.classList.add('invalid');
+            erroDiv.textContent = mensagem;
+            erroDiv.classList.remove('sr-only');
+        }
+
+        function limparErros() {
+            [modalCpf, modalData].forEach(el => {
+                el.classList.remove('invalid');
+                el.style.borderColor = '';
+            });
+            [cpfError, dataError].forEach(el => el.classList.add('sr-only'));
+        }
+
+        function renderOrdens() {
+            const container = document.getElementById('ordens-container');
+            container.innerHTML = '';
+            if (ordens.length === 0) {
+                container.innerHTML = '<p>Nenhuma ordem cadastrada.</p>';
+                atualizarEstatisticas();
+                return;
+            }
+
+            ordens.forEach((item, index) => {
+                const ordemItem = document.createElement('div');
+                ordemItem.className = 'ordem-item';
+
+                const ordemLabel = document.createElement('span');
+                ordemLabel.className = 'ordem-text' + (item.feito ? ' concluida' : '');
+                ordemLabel.textContent = item.ordem;
+
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'button-container';
+
+                const delBtn = document.createElement('button');
+                delBtn.textContent = 'Deletar';
+                delBtn.className = 'danger';
+                delBtn.onclick = () => {
+                    if (confirm(`Apagar a ordem ${item.ordem}?`)) {
+                        // Remove do registro unificado
+                        let registros = safeStorageGet('registro_unificado');
+                        registros = registros.filter(r => r.pon !== item.ordem);
+                        safeStorageSet('registro_unificado', registros);
+                        
+                        // Recarrega ordens
+                        ordens = carregarOrdensDoRegistro();
+                        renderOrdens();
+                    }
+                };
+
+                buttonContainer.appendChild(delBtn);
+                ordemItem.appendChild(ordemLabel);
+                ordemItem.appendChild(buttonContainer);
+                container.appendChild(ordemItem);
+            });
+            atualizarEstatisticas();
+        }
+
+        // ================== MODAL ==================
+        function encontrarProximaOrdemNaoConcluida() {
+            for (let i = 0; i < ordens.length; i++) {
+                if (!ordens[i].feito) return i;
+            }
+            return -1;
+        }
+
+        function abrirModal(pon) {
+            limparErros();
+            modalPon.value = pon;
+            
+            // Preenche CPF/data se já existir no registro
+            const registros = safeStorageGet('registro_unificado');
+            const registro = registros.find(r => r.pon === pon);
+            if (registro) {
+                modalCpf.value = registro.cpf || '';
+                modalData.value = registro.dataCriacao || '';
+            } else {
+                modalCpf.value = '';
+                modalData.valueAsDate = new Date();
+            }
+            
+            modal.style.display = "block";
+        }
+
+        function fecharModal() {
+            modal.style.display = "none";
+        }
+
+        // ================== EVENTOS ==================
+        document.getElementById('add-button').addEventListener('click', () => {
+            const novaOrdem = document.getElementById('nova-ordem').value.trim().toUpperCase();
+            if (!novaOrdem) {
+                alert("PON não pode estar vazia.");
+                return;
+            }
+            
+            // Adiciona ao registro unificado como pendente
+            let registros = safeStorageGet('registro_unificado');
+            if (!registros.some(r => r.pon === novaOrdem)) {
+                registros.push({
+                    pon: novaOrdem,
+                    cpf: '',
+                    dataCriacao: '',
+                    statusOrdem: 'pendente',
+                    timestamp: new Date().toISOString()
+                });
+                safeStorageSet('registro_unificado', registros);
+            }
+            
+            ordens = carregarOrdensDoRegistro();
+            document.getElementById('nova-ordem').value = '';
+            renderOrdens();
+        });
+
+        document.getElementById('import-button').addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const jsonData = JSON.parse(ev.target.result);
+                        let registros = safeStorageGet('registro_unificado');
+                        
+                        // Adiciona novas PONs como pendentes
+                        const novasPons = jsonData
+                            .filter(item => item.ordem)
+                            .map(item => item.ordem)
+                            .filter(pon => !registros.some(r => r.pon === pon));
+                        
+                        novasPons.forEach(pon => {
+                            registros.push({
+                                pon,
+                                cpf: '',
+                                dataCriacao: '',
+                                statusOrdem: 'pendente',
+                                timestamp: new Date().toISOString()
+                            });
+                        });
+                        
+                        safeStorageSet('registro_unificado', registros);
+                        ordens = carregarOrdensDoRegistro();
+                        renderOrdens();
+                    } catch (err) {
+                        alert("Erro ao importar: " + err.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        });
+
+        document.getElementById('export-excel').addEventListener('click', () => {
+            const registros = safeStorageGet('registro_unificado');
+            if (registros.length === 0) {
+                alert("Nenhuma ordem para exportar.");
+                return;
+            }
+
+            const relatorio = registros.map(r => ({
+                PON: r.pon,
+                CPF: r.cpf || '',
+                "Data Criação": r.dataCriacao || '',
+                Status: r.statusOrdem === 'concluida' ? "Ativa" : "Pendente",
+                "Data Registro": new Date(r.timestamp).toLocaleString('pt-BR')
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(relatorio);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Ordens");
+            XLSX.writeFile(wb, `relatorio_ordens_${new Date().toISOString().slice(0,10)}.xlsx`);
+        });
+
+        document.getElementById('clear-button').addEventListener('click', () => {
+            if (confirm("Apagar TODOS os registros?")) {
+                localStorage.removeItem('registro_unificado');
+                ordens = [];
+                renderOrdens();
+            }
+        });
+
+        document.getElementById('sequencial-button').addEventListener('click', () => {
+            const proximoIndex = encontrarProximaOrdemNaoConcluida();
+            if (proximoIndex === -1) {
+                alert(ordens.length > 0 ? "Todas as ordens já foram concluídas!" : "Nenhuma ordem cadastrada.");
+                return;
+            }
+            ordemAtualIndex = proximoIndex;
+            abrirModal(ordens[ordemAtualIndex].ordem);
+        });
+
+        document.getElementById('confirm-button').addEventListener('click', () => {
+            limparErros();
+            const pon = modalPon.value;
+            const cpf = modalCpf.value.trim();
+            const dataCriacao = modalData.value;
+
+            let valido = true;
+
+            if (!cpf || !validarCPF(cpf)) {
+                mostrarErro(modalCpf, cpfError, "CPF inválido.");
+                valido = false;
+            }
+
+            if (!dataCriacao) {
+                mostrarErro(modalData, dataError, "Selecione uma data.");
+                valido = false;
+            }
+
+            if (!valido) return;
+
+            const sucesso = salvarNoRegistroUnificado(pon, cpf, dataCriacao);
+            if (sucesso) {
+                ordens = carregarOrdensDoRegistro();
+                renderOrdens();
+                fecharModal();
+                
+                const proximoIndex = encontrarProximaOrdemNaoConcluida();
+                if (proximoIndex === -1) {
+                    alert("Todas as ordens foram concluídas!");
+                } else {
+                    ordemAtualIndex = proximoIndex;
+                    abrirModal(ordens[ordemAtualIndex].ordem);
+                }
+            } else {
+                alert("Erro ao salvar. Verifique o console.");
+            }
+        });
+
+        document.getElementById('skip-button').addEventListener('click', () => {
+            fecharModal();
+        });
+
+        document.querySelector('.close').addEventListener('click', fecharModal);
+        window.onclick = (e) => { if (e.target === modal) fecharModal(); };
+
+        // ================== INICIALIZAÇÃO ==================
+        renderOrdens();
+        
+        // Status de conexão
+        function updateOnlineStatus() {
+            const statusEl = document.getElementById('onlineStatus');
+            if (navigator.onLine) {
+                statusEl.textContent = 'Online';
+                statusEl.className = 'online-status online';
+            } else {
+                statusEl.textContent = 'Offline';
+                statusEl.className = 'online-status offline';
+            }
+        }
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+    </script>
+</body>
+
+</html>

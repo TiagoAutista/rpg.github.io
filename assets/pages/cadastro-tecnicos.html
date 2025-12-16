@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Técnicos Cadastrados — PRV GAMER DASHBOARD</title>
+  <link rel="stylesheet" href="/assets/css/main.css" />
+  <link rel="stylesheet" href="/assets/css/tecnicos/index.css" />
+</head>
+<body class="UI_design">
+  <div class="main-wrapper">
+    <div class="main-content">
+      <main class="main-nav main-container framed" aria-label="Lista de Técnicos Cadastrados">
+
+        <!-- Header Temático -->
+        <header class="header-title">
+          <h1 class="cinzel-title arcade glow">TÉCNICOS CADASTRADOS</h1>
+        </header>
+
+        <!-- Lista de Técnicos -->
+        <section class="modules-section">
+          <div class="table-wrapper bg-card">
+            <table id="tecnicoTable" class="order-table">
+              <thead>
+                <tr>
+                  <th class="kpi-label">MATRÍCULA</th>
+                  <th class="kpi-label">NOME</th>
+                  <th class="kpi-label">TELEFONE</th>
+                </tr>
+              </thead>
+              <tbody id="tecnicoList">
+                <!-- Preenchido dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Mensagem de feedback (opcional, já no DOM) -->
+        <div id="noTecnicosMessage" class="message bg-card" style="display: none;" role="status">
+          <p class="cinzel-title arcade" style="margin: 0;">NENHUM TÉCNICO CADASTRADO</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Carrega técnicos do localStorage
+    const tecnicos = JSON.parse(localStorage.getItem('tecnicos')) || [];
+    const tbody = document.getElementById('tecnicoList');
+    const noMessage = document.getElementById('noTecnicosMessage');
+
+    if (tecnicos.length === 0) {
+      noMessage.style.display = 'block';
+    } else {
+      tecnicos.forEach(t => {
+        const tr = document.createElement('tr');
+        // Aplica estilo arcade aos dados
+        tr.innerHTML = `
+          <td class="arcade">${t.matricula}</td>
+          <td class="arcade">${t.nome}</td>
+          <td class="arcade">${t.telefone || '—'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
+</body>
+</html>

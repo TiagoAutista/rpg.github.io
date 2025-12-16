@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro de Ordens de Serviço — PRV GAMER DASHBOARD</title>
+  <link rel="stylesheet" href="/assets/css/main.css" />
+  <link rel="stylesheet" href="/assets/css/tecnicos/index.css" />
+</head>
+
+<body class="UI_design">
+  <div class="main-wrapper">
+    <div class="main-content">
+      <main class="main-nav main-container framed" aria-label="Cadastro de Ordens de Serviço">
+
+        <!-- Header -->
+        <header class="header-title">
+          <h1 class="cinzel-title arcade glow">TEAM SELECT</h1>
+        </header>
+
+        <!-- Formulário: Nova Ordem (tratado como módulo operacional) -->
+        <section class="modules-section">
+          <h2 class="cinzel-title arcade">NOVA ORDEM DE SERVIÇO</h2>
+          <form id="orderForm" class="bg-card" novalidate>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="ponOrdem" class="kpi-label">PON DA ORDEM</label>
+                <input
+                  type="text"
+                  class="main-input arcade"
+                  id="ponOrdem"
+                  name="ponOrdem"
+                  placeholder="Ex: ORD12345"
+                  required
+                  aria-describedby="pon-help"
+                />
+                <small id="pon-help" class="form-hint">Número único da ordem</small>
+              </div>
+
+              <div class="form-field">
+                <label for="tecnico" class="kpi-label">MATRÍCULA DO TÉCNICO</label>
+                <div class="input-with-button">
+                  <input
+                    type="text"
+                    class="main-input arcade"
+                    id="tecnico"
+                    name="tecnico"
+                    placeholder="Ex: MAT12345"
+                    required
+                    aria-describedby="tecnico-help"
+                  />
+                  <button
+                    type="button"
+                    id="btnCadastrarTecnico"
+                    class="btn arcade"
+                    disabled
+                    aria-label="Cadastrar novo técnico"
+                  >
+                    + TÉCNICO
+                  </button>
+                </div>
+                <small id="tecnico-help" class="form-hint">Matrícula do técnico responsável</small>
+              </div>
+            </div>
+
+            <!-- Dados automáticos do técnico -->
+            <div class="form-row">
+              <div class="form-field">
+                <label for="tecnicoNome" class="kpi-label">NOME DO TÉCNICO</label>
+                <input
+                  type="text"
+                  class="main-input arcade"
+                  id="tecnicoNome"
+                  name="tecnicoNome"
+                  placeholder="Carregado automaticamente"
+                  readonly
+                  aria-readonly="true"
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="tecnicoTelefone" class="kpi-label">TELEFONE</label>
+                <input
+                  type="text"
+                  class="main-input arcade"
+                  id="tecnicoTelefone"
+                  name="tecnicoTelefone"
+                  placeholder="Carregado automaticamente"
+                  readonly
+                  aria-readonly="true"
+                />
+              </div>
+            </div>
+
+            <!-- Tipo, Data, Status, CPF/CNPJ -->
+            <div class="form-row">
+              <div class="form-field">
+                <label for="descricao" class="kpi-label">TIPO DE SERVIÇO</label>
+                <select class="main-input arcade" id="descricao" name="descricao" required>
+                  <option value="" disabled selected>Selecione</option>
+                  <option value="Manobra">Manobra</option>
+                  <option value="Informação Técnica">Informação Técnica</option>
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label for="dataOrdem" class="kpi-label">DATA DA ORDEM</label>
+                <input type="date" class="main-input arcade" id="dataOrdem" name="dataOrdem" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="status" class="kpi-label">STATUS</label>
+                <select class="main-input arcade" id="status" name="status" required>
+                  <option value="" disabled selected>Selecione</option>
+                  <option value="Manobrado">Manobrado</option>
+                  <option value="Não Manobrado">Não Manobrado</option>
+                  <option value="Informado">Informado</option>
+                  <option value="Não Informado">Não Informado</option>
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label for="cpfCnpj" class="kpi-label">CPF / CNPJ</label>
+                <input
+                  type="text"
+                  class="main-input arcade"
+                  id="cpfCnpj"
+                  name="cpfCnpj"
+                  placeholder="123.456.789-00"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Ações do Formulário -->
+            <div class="form-actions">
+              <button type="submit" class="btn arcade glow">CADASTRAR ORDEM</button>
+              <button
+                type="button"
+                id="cancelEditOrderBtn"
+                class="btn arcade"
+                style="display: none;"
+                aria-label="Cancelar edição"
+              >
+                CANCELAR
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Modal: Cadastrar Técnico -->
+        <div id="modalTecnico" class="modal bg-card" role="dialog" aria-modal="true" aria-labelledby="modalTecnicoTitle"
+          style="display: none;">
+          <button type="button" id="closeModal" class="close-btn arcade" aria-label="Fechar">&times;</button>
+          <h2 id="modalTecnicoTitle" class="cinzel-title arcade">CADASTRAR NOVO TÉCNICO</h2>
+          <form id="tecnicoForm" class="modal-form">
+            <div class="form-field">
+              <label for="matriculaTecnico" class="kpi-label">MATRÍCULA</label>
+              <input type="text" class="main-input arcade" id="matriculaTecnico" name="matriculaTecnico" required />
+            </div>
+            <div class="form-field">
+              <label for="nomeTecnico" class="kpi-label">NOME COMPLETO</label>
+              <input type="text" class="main-input arcade" id="nomeTecnico" name="nomeTecnico" required />
+            </div>
+            <div class="form-field">
+              <label for="telefoneTecnico" class="kpi-label">TELEFONE (OPCIONAL)</label>
+              <input type="tel" class="main-input arcade" id="telefoneTecnico" name="telefoneTecnico" />
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn arcade glow">SALVAR TÉCNICO</button>
+              <button type="button" id="cancelTecnico" class="btn arcade">CANCELAR</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Ações Rápidas -->
+        <section class="modules-section">
+          <h2 class="cinzel-title arcade">AÇÕES RÁPIDAS</h2>
+          <div class="modules-grid">
+            <div class="module-card bg-card">
+              <button id="updateCountOrderBtn" class="btn arcade glow" type="button">ATUALIZAR CONTAGEM</button>
+              <div id="countOrderMessage" class="kpi-value" aria-live="polite"></div>
+            </div>
+            <div class="module-card bg-card">
+              <label for="searchOrder" class="kpi-label">BUSCAR ORDEM</label>
+              <input
+                type="text"
+                class="main-input arcade"
+                id="searchOrder"
+                name="searchOrder"
+                placeholder="PON, técnico, CPF..."
+                aria-label="Buscar ordem por PON, técnico ou CPF/CNPJ"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Lista de Ordens (CONTEÚDO PRINCIPAL) -->
+        <section class="modules-section">
+          <h2 class="cinzel-title arcade">ORDENS CADASTRADAS</h2>
+          <div class="table-wrapper bg-card">
+            <table id="orderList" class="order-table">
+              <thead>
+                <tr>
+                  <th class="kpi-label">PON</th>
+                  <th class="kpi-label">TÉCNICO</th>
+                  <th class="kpi-label">TIPO</th>
+                  <th class="kpi-label">DATA</th>
+                  <th class="kpi-label">STATUS</th>
+                  <th class="kpi-label">CPF/CNPJ</th>
+                  <th class="kpi-label">AÇÃO</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Preenchido dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Feedback -->
+        <div id="message" class="message bg-card" role="alert" aria-live="assertive" aria-atomic="true"></div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/assets/js/module/ordem/index.js" defer></script>
+</body>
+
+</html>

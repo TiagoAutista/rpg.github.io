@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TECHNICIANS — PRV GAMER DASHBOARD</title>
+    <link rel="stylesheet" href="/assets/css/main.css" />
+    <link rel="stylesheet" href="/assets/css/tecnicos/index.css" />
+</head>
+<body class="UI_design">
+  <div class="main-wrapper">
+    <div class="main-content">
+      <main class="main-nav main-container framed" aria-label="Lista de Técnicos">
+        <!-- Botão VOLTAR -->
+        <div class="modules-section" style="margin-bottom: 24px;">
+          <a href="/index.html" class="btn arcade glow" style="display: inline-block; padding: 8px 16px;">
+            ⬅ VOLTAR AO DASHBOARD
+          </a>
+        </div>
+        <!-- Conteúdo -->
+        <section class="modules-section">
+          <h2 class="cinzel-title arcade">TECHNICIANS</h2>
+          <div class="table-wrapper bg-card">
+            <table id="tecnicoTable" class="order-table">
+              <thead>
+                <tr>
+                  <th class="kpi-label">MATRÍCULA</th>
+                  <th class="kpi-label">NOME</th>
+                  <th class="kpi-label">TELEFONE</th>
+                </tr>
+              </thead>
+              <tbody id="tecnicoList"></tbody>
+            </table>
+          </div>
+          <div id="noTecnicosMessage" class="message bg-card" style="display:none;">
+            <p class="cinzel-title arcade">NENHUM TÉCNICO CADASTRADO</p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <!-- Script da lista -->
+  <script>
+    const tecnicos = JSON.parse(localStorage.getItem('tecnicos')) || [];
+    const tbody = document.getElementById('tecnicoList');
+    const msg = document.getElementById('noTecnicosMessage');
+    if (tecnicos.length === 0) {
+      msg.style.display = 'block';
+    } else {
+      tecnicos.forEach(t => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="arcade">${t.matricula}</td>
+          <td class="arcade">${t.nome}</td>
+          <td class="arcade">${t.telefone || '—'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
+</body>
+</html>
